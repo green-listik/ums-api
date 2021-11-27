@@ -30,7 +30,7 @@ async def edit_event(session: AsyncSession, event_id: int, theme: str, reason: s
               main_event: bool, is_governor: bool,
               file_name: str):
 
-    event: Event = get_event_id(session, event_id)
+    event: Event = await get_event_id(session, event_id)
 
     event.theme = theme
     event.theme_reason = reason
