@@ -4,12 +4,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..models import *
 
 
-async def add_department(session: AsyncSession, depo_id: int, depo_name: str):
-    new_depo = Depo(id=depo_id, name=depo_name)
+async def add_department(session: AsyncSession, depo_name: str):
+    new_depo = Depo(name=depo_name)
     session.add(new_depo)
     await session.commit()
-    return new_depo
-
 
 async def get_depo_name(session: AsyncSession, name: str):
     department = await session.execute(select(Depo).where(Depo.name == name))

@@ -1,7 +1,10 @@
-from pydantic import BaseModel
+from typing import Optional
+
+from pydantic import BaseModel, Field
 
 
 class User(BaseModel):
+    depo_id: int
     name: str
     login: str
     password: str
@@ -10,13 +13,16 @@ class User(BaseModel):
     second_name: str
 
 
+class UserLoginSchema(BaseModel):
+    login: str
+    password: str
+
+
 class Depo(BaseModel):
     name: str
 
 
 class Event(BaseModel):
-    user: str
-    depo: str
     theme: str
     reason: str
     date: int
