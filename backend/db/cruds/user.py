@@ -5,10 +5,14 @@ from ..models import *
 
 
 async def register_user(session: AsyncSession, login: str, password: str, surname: str, name: str,
-                        patronymic: str, depo_id: int):
+                        patronymic: str, depo_id: int, edit_events: bool = False, edit_users: bool = False,
+                        admin_service: bool = False):
+    role = UserRoles(edit_users=edit_users, edit_events=edit_events, admin_service=admin_service)
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    session.add(role)
     new_user = User(login=login, hashed_pass=hashed_password, last_name=surname, first_name=name,
-                    patronymic=patronymic, depo_id = depo_id)
+                    patronymic=patronymic, depo_id=depo_id, role_id=role.id)
+    new_user.role = role
     session.add(new_user)
     await session.commit()
     return new_user

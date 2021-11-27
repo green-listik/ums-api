@@ -3,16 +3,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..models import *
 
 
-async def add_event(session: AsyncSession, user: User, depo: Depo,
-                    theme: str, reason: str,
-                    event_date: datetime, place: str,
-                    responsible_person: str, speaker: str,
-                    main_event: bool, is_governor: bool,
-                    file_name: str
-                    ):
-    new_event = Event(user=user, depo=depo, theme=theme, theme_reason=reason,
+async def create_event(session: AsyncSession, user_id, depo_id,
+                       theme: str, reason: str,
+                       event_date: datetime, place: str,
+                       responsible_person: str, speaker: str,
+                       main_event: bool, is_governor: bool,
+                       file_name: str
+                       ):
+    new_event = Event(theme=theme, theme_reason=reason,
                       date=event_date, place=place, responsible_person=responsible_person,
-                      speaker=speaker, main_event=main_event, is_guber=is_governor, file_name=file_name)
+                      speaker=speaker, main_event=main_event, is_guber=is_governor, file_name=file_name,
+                      depo_id=depo_id, user_id=user_id)
     session.add(new_event)
     await session.commit()
     return new_event
