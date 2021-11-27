@@ -7,16 +7,20 @@ import datetime
 from config import Base
 
 
+class Tokens(Base):
+    user = relationship("User", back_populates="tokens")
+    token = Column(String)
+    expired_at = Column(DateTime)
+
+
 class DepoRoles(Base):
     __tablename__ = "depo_roles"
-    depo_id = Column(Integer, ForeignKey('depos.id'))
     depo = relationship("Depo", back_populates="roles")
     get_all_events = Column(Boolean, default=False)
 
 
 class UserRoles(Base):
     __tablename__ = "user_roles"
-    user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship("User", back_populates="roles")
     edit_events = Column(Boolean, default=False)
     edit_users = Column(Boolean, default=False)
@@ -33,7 +37,7 @@ class User(Base):
     first_name = Column(String)
     patronymic = Column(String)
     events = relationship("Event", back_populates="user")
-    roles = relationship("User_roles", back_populates="parent")
+    roles = relationship("UserRoles", back_populates="user")
 
 
 class Depo(Base):
@@ -46,9 +50,7 @@ class Depo(Base):
 class Event(Base):
     __tablename__ = "events"
     id = Column(Integer, autoincrement=True, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship("User", back_populates="events")
-    depo_id = Column(Integer, ForeignKey('depos.id'))
     depo = relationship("Depo", back_populates="events")
     name = Column(String)
     theme = Column(String)
