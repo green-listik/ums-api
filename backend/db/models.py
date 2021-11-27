@@ -52,7 +52,6 @@ class Event(Base):
     id = Column(Integer, autoincrement=True, primary_key=True, index=True)
     user = relationship("User", back_populates="events")
     depo = relationship("Depo", back_populates="events")
-    name = Column(String)
     theme = Column(String)
     theme_reason = Column(String)
     date = Column(DateTime)
