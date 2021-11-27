@@ -1,11 +1,13 @@
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from backend.db.models import User
 
 
-
-def register_user(user_id: int, login: str, hash_password: str, surname: str, name: str, patronymic: str,
-                  depo_id: int):
+def register_user(session: AsyncSession, login: str, password: str, surname: str, name: str, patronymic: str):
     pass
 
 
-def edit_user(user_id: int, login: str, hash_password: str,
-              new_user_data: register_user):
-    pass
+async def get_user_by_login(session: AsyncSession, login: str):
+    q = await session.execute(select(User).where(User.login == login))
+    return q.scalars().first()

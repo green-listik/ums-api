@@ -25,5 +25,3 @@ class Event(BaseModel):
     speaker: str
     isImportant: bool
     isGubernator: bool
-    file_name: str
-    created_date: int
