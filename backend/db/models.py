@@ -36,7 +36,7 @@ class User(Base):
     depo_id = Column(Integer, ForeignKey('depos.id'))
     depo = relationship('Depo', backref='users', lazy="joined")
     role_id = Column(Integer, ForeignKey('user_roles.id'))
-    role = relationship('UserRoles', backref='user', lazy="joined")
+    role: UserRoles = relationship('UserRoles', backref='user', lazy="joined")
 
 
 class Depo(Base):
