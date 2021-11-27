@@ -67,11 +67,11 @@ async def add_user(user: api_models.User, session: AsyncSession = Depends(get_se
     current_user = await get_user_from_jwt(session, jwt)
     if current_user.role.admin_service:
         res = await register_user(session, user.login, user.password, user.last_name, user.first_name,
-                                  user.second_name, user.depo_id)
+                                  user.second_name, user.depo_id, user.edit_events, user.edit_users)
         return {'login': user.login, 'password': user.password}
     if current_user.role.edit_users and current_user.depo.id == user.depo_id and not user.admin_service:
         res = await register_user(session, user.login, user.password, user.last_name, user.first_name,
-                                  user.second_name, current_user.depo_id)
+                                  user.second_name, current_user.depo_id, user.edit_events, user.edit_users)
         return {'login': user.login, 'password': user.password}
     return {'error': 'Not enough rights'}
 
