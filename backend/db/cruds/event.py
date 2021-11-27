@@ -3,14 +3,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..models import *
 
 
-async def add_event(session: AsyncSession, event_id: int, user: User, depo: Depo,
-              theme: str, reason: str,
-              event_date: datetime, place: str,
-              responsible_person: str, speaker: str,
-              main_event: bool, is_governor: bool,
-              file_name: str
-              ):
-    new_event = Event(id=event_id, user=user, depo=depo, theme=theme, theme_reason=reason,
+async def add_event(session: AsyncSession, user: User, depo: Depo,
+                    theme: str, reason: str,
+                    event_date: datetime, place: str,
+                    responsible_person: str, speaker: str,
+                    main_event: bool, is_governor: bool,
+                    file_name: str
+                    ):
+    new_event = Event(user=user, depo=depo, theme=theme, theme_reason=reason,
                       date=event_date, place=place, responsible_person=responsible_person,
                       speaker=speaker, main_event=main_event, is_guber=is_governor, file_name=file_name)
     session.add(new_event)
@@ -25,11 +25,10 @@ async def get_event_id(session: AsyncSession, event_id: int):
 
 
 async def edit_event(session: AsyncSession, event_id: int, theme: str, reason: str,
-              event_date: datetime, place: str,
-              responsible_person: str, speaker: str,
-              main_event: bool, is_governor: bool,
-              file_name: str):
-
+                     event_date: datetime, place: str,
+                     responsible_person: str, speaker: str,
+                     main_event: bool, is_governor: bool,
+                     file_name: str):
     event: Event = await get_event_id(session, event_id)
 
     event.theme = theme

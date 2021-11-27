@@ -1,3 +1,6 @@
-fastapi
-SQLAlchemy
+fastapi~=0.70.0
+SQLAlchemy~=1.4.27
 aiosqlite
+pydantic~=1.8.2
+pyjwt
+passlib~=1.7.4

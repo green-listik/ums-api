@@ -1,27 +1,24 @@
+import bcrypt as bcrypt
 from sqlalchemy import Column, ForeignKey, DateTime, Boolean
 from sqlalchemy import String
 from sqlalchemy import Integer
 from sqlalchemy.orm import relationship
 import datetime
 
-from config import Base
-
-
-class Tokens(Base):
-    user = relationship("User", back_populates="tokens")
-    token = Column(String)
-    expired_at = Column(DateTime)
+from .config import Base
 
 
 class DepoRoles(Base):
     __tablename__ = "depo_roles"
-    depo = relationship("Depo", back_populates="roles")
+    id = Column(Integer, autoincrement=True, primary_key=True, index=True)
+    depo_id = Column(Integer, ForeignKey('depos.id'))
+    depo = relationship("Depo", backref="roles", lazy="joined")
     get_all_events = Column(Boolean, default=False)
 
 
 class UserRoles(Base):
     __tablename__ = "user_roles"
-    user = relationship("User", back_populates="roles")
+    id = Column(Integer, autoincrement=True, primary_key=True, index=True)
     edit_events = Column(Boolean, default=False)
     edit_users = Column(Boolean, default=False)
     admin_service = Column(Boolean, default=False)
@@ -36,22 +33,25 @@ class User(Base):
     last_name = Column(String)
     first_name = Column(String)
     patronymic = Column(String)
-    events = relationship("Event", back_populates="user")
-    roles = relationship("UserRoles", back_populates="user")
+    depo_id = Column(Integer, ForeignKey('depos.id'))
+    depo = relationship('Depo', backref='users', lazy="joined")
+    role_id = Column(Integer, ForeignKey('user_roles.id'))
+    role = relationship('UserRoles', backref='user', lazy="joined")
 
 
 class Depo(Base):
     __tablename__ = "depos"
     id = Column(Integer, autoincrement=True, primary_key=True, index=True)
     name = Column(String)
-    events = relationship("Event", back_populates="depo")
 
 
 class Event(Base):
     __tablename__ = "events"
     id = Column(Integer, autoincrement=True, primary_key=True, index=True)
-    user = relationship("User", back_populates="events")
-    depo = relationship("Depo", back_populates="events")
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship("User", backref="events", lazy="joined")
+    depo_id = Column(Integer, ForeignKey('depos.id'))
+    depo = relationship("Depo", backref="events", lazy="joined")
     theme = Column(String)
     theme_reason = Column(String)
     date = Column(DateTime)
