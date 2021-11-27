@@ -60,6 +60,6 @@ async def get_events_place(session: AsyncSession, place: str):
     return events.scalars().all()
 
 
-def get_events_is_guber(session: AsyncSession, place: str):
+async def get_events_is_guber(session: AsyncSession, place: str):
     events = await session.execute(select(Event).where(Event.place == place))
     return events.scalars().all()
