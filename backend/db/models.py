@@ -6,10 +6,12 @@ import datetime
 
 from config import Base
 
+
 class Tokens(Base):
-    user = relationship("User")
+    user = relationship("User", back_populates="tokens")
     token = Column(String)
     expired_at = Column(DateTime)
+
 
 class DepoRoles(Base):
     __tablename__ = "depo_roles"
@@ -35,7 +37,7 @@ class User(Base):
     first_name = Column(String)
     patronymic = Column(String)
     events = relationship("Event", back_populates="user")
-    roles = relationship("User_roles", back_populates="parent")
+    roles = relationship("UserRoles", back_populates="user")
 
 
 class Depo(Base):
