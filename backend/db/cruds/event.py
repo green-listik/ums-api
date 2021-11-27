@@ -20,7 +20,7 @@ async def add_event(session: AsyncSession, event_id: int, user: User, depo: Depo
     return new_event
 
 
-async def get_event(session: AsyncSession, event_id: int):
+async def get_event_id(session: AsyncSession, event_id: int):
     event = await session.execute(select(Event).where(Event.id == event_id))
 
     return event.scalars().one()
@@ -30,11 +30,36 @@ async def edit_event(session: AsyncSession, event_id: int,  user_id: int, depo_i
     pass
 
 
-async def get_all_events(session: AsyncSession):
+async def get_events_all(session: AsyncSession):
     events = await session.execute(select(Event))
     return events.scalars().all()
 
 
-async def get_depo_events(session: AsyncSession, depo_id: int):
+async def get_events_depo(session: AsyncSession, depo_id: int):
     events = await session.execute(select(Event).where(Event.depo.id == depo_id))
+    return events.scalars().all()
+
+
+async def get_events_user_id(session: AsyncSession, user_id: int):
+    events = await session.execute(select(Event).where(Event.user.id == user_id))
+    return events.scalars().all()
+
+
+async def get_events_user_name(session: AsyncSession, user_name: str):
+    events = await session.execute(select(Event).where(Event.user.name == user_name))
+    return events.scalars().all()
+
+
+async def get_events_user(session: AsyncSession, user: User):
+    events = await session.execute(select(Event).where(Event.user == user))
+    return events.scalars().all()
+
+
+async def get_events_place(session: AsyncSession, place: str):
+    events = await session.execute(select(Event).where(Event.place == place))
+    return events.scalars().all()
+
+
+def get_events_is_guber(session: AsyncSession, place: str):
+    events = await session.execute(select(Event).where(Event.place == place))
     return events.scalars().all()
