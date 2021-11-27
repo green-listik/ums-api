@@ -22,7 +22,7 @@ async def create_event(session: AsyncSession, user_id, depo_id,
 async def get_event_id(session: AsyncSession, event_id: int):
     event = await session.execute(select(Event).where(Event.id == event_id))
 
-    return event.scalars().one()
+    return event.scalars().first()
 
 
 async def edit_event(session: AsyncSession, event_id: int, theme: str, reason: str,

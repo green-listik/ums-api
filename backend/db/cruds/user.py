@@ -20,12 +20,12 @@ async def register_user(session: AsyncSession, login: str, password: str, surnam
 
 async def get_user_id(session: AsyncSession, user_id: int):
     user = await session.execute(select(User).where(User.id == user_id))
-    return user.scalars().one()
+    return user.scalars().first()
 
 
 async def get_user_login(session: AsyncSession, user_login: str):
     user = await session.execute(select(User).where(User.login == user_login))
-    return user.scalars().one()
+    return user.scalars().first()
 
 
 async def get_all_users_one_depo(session: AsyncSession, depo_id: int):
