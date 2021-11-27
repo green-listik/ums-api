@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pathlib import Path
 import api_models
+from config import ADMIN_LOGIN, ADMIN_PASWWORD
 from files import writeXLSX, packZIP
 from db.config import get_session, init_models
 from security import verify_password, sign_jwt, JWTBearer, decode_jwt
@@ -34,6 +35,7 @@ async def get_user_from_jwt(session, token: str) -> User:
 
 @app.on_event("startup")
 async def startup_event():
+    # TODO   NOT FOR PRODUCTION
     await init_models()
     try:
         os.mkdir("files")
@@ -41,7 +43,7 @@ async def startup_event():
     except FileExistsError:
         pass
     session = await get_session()
-    a = await register_user(session, 'a', 'a', 'asdfsadf', 'asdfsda', 'asdf', 1, True, True, True)
+    a = await register_user(session, ADMIN_LOGIN, ADMIN_PASWWORD, 'admin', 'admin', 'admin', 0, True, True, True)
 
 
 @app.post("/uploadfile/", dependencies=[Depends(JWTBearer())])
@@ -90,7 +92,8 @@ async def add_depo(depo: api_models.Depo, session: AsyncSession = Depends(get_se
                    jwt=Depends(JWTBearer())):
     user = await get_user_from_jwt(session, jwt)
     if user.role.admin_service:
-        res = await add_department(session, depo.name)
+        await add_department(session, depo.name)
+        res = await get_depo_name(session, depo.name)
         return res.id
     return {'error': 'Not enough rights'}
 
@@ -108,11 +111,13 @@ async def add_event(event: api_models.Event,
     return 'ok'
 
 
-@app.get("/get_events", dependencies=[Depends(JWTBearer())])
-async def get_events(session: AsyncSession = Depends(get_session), jwt=Depends(JWTBearer()), depo_id: int = None):
+@app.post("/get_events", dependencies=[Depends(JWTBearer())])
+async def get_events(depo: api_models.Depo = None, session: AsyncSession = Depends(get_session),
+                     jwt=Depends(JWTBearer())):
     user = await get_user_from_jwt(session, jwt)
-    if depo_id and user.role.admin_service:
-        events = await get_events_depo(session, depo_id)
+    if depo and user.role.admin_service:
+        res = await get_depo_name(session, depo.name)
+        events = await get_events_depo(session, res.id)
     else:
         events = await get_events_depo(session, user.depo_id)
     res = []

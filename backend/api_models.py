@@ -2,7 +2,6 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-
 class User(BaseModel):
     depo_id: int
     login: str
