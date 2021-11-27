@@ -1,9 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from ..models import *
 
-from datetime import datetime
 
 async def add_event(session: AsyncSession, event_id: int, user: User, depo: Depo,
               theme: str, reason: str,
@@ -26,8 +24,26 @@ async def get_event_id(session: AsyncSession, event_id: int):
     return event.scalars().one()
 
 
-async def edit_event(session: AsyncSession, event_id: int,  user_id: int, depo_id: int):
-    pass
+async def edit_event(session: AsyncSession, event_id: int, theme: str, reason: str,
+              event_date: datetime, place: str,
+              responsible_person: str, speaker: str,
+              main_event: bool, is_governor: bool,
+              file_name: str):
+
+    event: Event = get_event_id(session, event_id)
+
+    event.theme = theme
+    event.theme_reason = reason
+    event.event_date = event_date
+    event.place = place
+    event.responsible_person = responsible_person
+    event.speaker = speaker
+    event.main_event = main_event
+    event.is_guber = is_governor
+    event.file_name = file_name
+
+    await session.commit()
+    return event
 
 
 async def get_events_all(session: AsyncSession):
