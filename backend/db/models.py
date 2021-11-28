@@ -1,5 +1,5 @@
 import bcrypt as bcrypt
-from sqlalchemy import Column, ForeignKey, DateTime, Boolean
+from sqlalchemy import Column, ForeignKey, DateTime, Boolean, TIMESTAMP
 from sqlalchemy import String
 from sqlalchemy import Integer
 from sqlalchemy.orm import relationship

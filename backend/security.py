@@ -8,6 +8,7 @@ from fastapi import Depends, Request, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api_models import UserLoginSchema
+import config
 from db.config import get_session
 from db.cruds.user import get_user_login
 from db.models import User
@@ -16,10 +17,9 @@ import jwt
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# TODO get from config
-SECRET_KEY = 'TEST'
+SECRET_KEY = config.SECRET_KEY
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = config.ACCESS_TOKEN_EXPIRE_MINUTES
 
 
 def verify_password(password: str, hashed_password):

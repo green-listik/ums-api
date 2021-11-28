@@ -47,7 +47,7 @@ async def edit_event(session: AsyncSession, event_id: int, theme: str, reason: s
 
 
 async def get_events_all(session: AsyncSession):
-    events = await session.execute(select(Event))
+    events = await session.execute(select(Event).order_by(Event.date))
     return events.scalars().all()
 
 

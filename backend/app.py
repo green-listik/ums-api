@@ -55,6 +55,7 @@ async def create_upload_file(file: UploadFile = File(...), session: AsyncSession
     new_filename = Path(file_name)
     temp = new_filename.stem + f'_{current_user.depo.name if current_user.depo else "test"}'
     file_name = os.getcwd() + "/files/" + temp + new_filename.suffix
+
     with open(file_name, 'wb+') as f:
         f.write(file.file.read())
         f.close()
@@ -104,9 +105,10 @@ async def add_event(event: api_models.Event,
     user = await get_user_from_jwt(session, jwt)
     file_name = os.getcwd() + "/files/" + event.file_name.replace(" ", "-")
     new_filename = Path(file_name)
-    temp = new_filename.stem + f'_{user.depo.name}'
+    temp = new_filename.stem + f'_{user.depo.name if user.depo else "test"}'
     file_name = temp + new_filename.suffix
-    res = await create_event(session, user.id, user.depo_id, event.theme, event.reason, event.date, event.place,
+    date = datetime.datetime.fromtimestamp(event.date)
+    res = await create_event(session, user.id, user.depo_id, event.theme, event.reason, date, event.place,
                              event.res_person, event.speaker, event.isImportant, event.isGubernator, file_name)
     return 'ok'
 
@@ -137,8 +139,9 @@ async def get_zip(session: AsyncSession = Depends(get_session), jwt=Depends(JWTB
         res = []
         events = await get_events_all(session)
         for i in events:
+            date = i.date.strftime("%d/%m/%y")
             temp = {'theme': i.theme,
-                    'theme_reason': i.theme_reason, 'date': i.date, 'place': i.place,
+                    'theme_reason': i.theme_reason, 'date': date, 'place': i.place,
                     'responsible_person': i.responsible_person, 'speaker': i.speaker, 'isImportant': i.main_event,
                     'isGubernator': i.is_guber}
             res.append(temp)
