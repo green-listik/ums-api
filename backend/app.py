@@ -53,8 +53,8 @@ async def create_upload_file(file: UploadFile = File(...), session: AsyncSession
 
     file_name = os.getcwd() + "/files/" + file.filename.replace(" ", "-")
     new_filename = Path(file_name)
-    temp = new_filename.stem + f'_{current_user.depo.name}'
-    file_name = temp + new_filename.suffix
+    temp = new_filename.stem + f'_{current_user.depo.name if current_user.depo else "test"}'
+    file_name = os.getcwd() + "/files/" + temp + new_filename.suffix
     with open(file_name, 'wb+') as f:
         f.write(file.file.read())
         f.close()
